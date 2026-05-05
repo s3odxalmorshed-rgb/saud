@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saudalmurshed | Linguistics</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --parchment: #f5efe2;
+    --gold: #c8922a;
+    --gold-light: #e8b84b;
+    --rust: #8b3a1e;
+    --sage: #4a6741;
+    --cream: #fdf8ed;
+    --shadow: rgba(26,18,8,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Parchment texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 3.5rem 2rem 2rem;
+    border-bottom: 1px solid rgba(200,146,42,0.3);
+  }
+
+  .site-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .site-title {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .site-title span {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .site-subtitle {
+    font-size: 1rem;
+    font-style: italic;
+    color: #7a6848;
+    margin-top: 0.6rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  /* ── ICON NAV ── */
+  .nav-ring {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2.5rem 2rem 2rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-btn:hover { transform: translateY(-4px); }
+  .nav-btn:hover .icon-circle { box-shadow: 0 8px 28px var(--shadow), 0 0 0 2px var(--gold); }
+  .nav-btn.active .icon-circle { background: var(--gold); box-shadow: 0 8px 28px rgba(200,146,42,0.4); }
+  .nav-btn.active .icon-circle svg { stroke: #fff; }
+  .nav-btn.active .icon-label { color: var(--gold); }
+
+  .icon-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--parchment);
+    border: 1.5px solid rgba(200,146,42,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+
+  .icon-circle svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.25s ease;
+  }
+
+  .icon-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #9a8464;
+    transition: color 0.25s ease;
+  }
+
+  /* ── CONTENT PANELS ── */
+  .panel-wrap {
+    position: relative;
+    z-index: 10;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .panel {
+    display: none;
+    animation: panelIn 0.5s ease forwards;
+  }
+
+  .panel.active { display: block; }
+
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PANEL 1: ABOUT ── */
+  .about-card {
+    background: var(--parchment);
+    border: 1px solid rgba(200,146,42,0.25);
+    border-radius: 4px;
+    padding: 3rem 3.5rem;
+    box-shadow: 0 4px 24px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-card::before {
+    content: '"';
+    position: absolute;
+    top: -0.5rem;
+    left: 1.5rem;
+    font-size: 9rem;
+    color: rgba(200,146,42,0.1);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .about-card h2 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-card p {
+    font-size: 1.25rem;
+    line-height: 1.85;
+    color: #3a2e18;
+    font-weight: 300;
+  }
+
+  /* ── PANEL 2: SYLLABUS ── */
+  .syllabus-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .syllabus-header h2 {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+
+  .syllabus-header p {
+    font-style: italic;
+    color: #9a8464;
+    margin-top: 0.4rem;
+  }
+
+  .weeks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .week-card {
+    background: var(--parchment);
+    border: 1px solid rgba(200,146,42,0.2);
+    border-radius: 3px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 2px 10px var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .week-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow);
+  }
+
+  .week-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .week-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  /* ── PANEL 3: LESSON ── */
+  .lesson-wrap {
+    background: var(--parchment);
+    border: 1px solid rgba(200,146,42,0.25);
+    border-radius: 4px;
+    padding: 3rem 3.5rem;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+
+  .lesson-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(200,146,42,0.1);
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .lesson-wrap h2 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .lesson-wrap .lesson-sub {
+    font-style: italic;
+    color: #9a8464;
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+  }
+
+  .lesson-section {
+    margin-bottom: 2rem;
+  }
+
+  .lesson-section h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--rust);
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(139,58,30,0.2);
+  }
+
+  .lesson-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #3a2e18;
+    font-weight: 300;
+    margin-bottom: 0.8rem;
+  }
+
+  .branches-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+
+  .branch-tag {
+    background: rgba(200,146,42,0.08);
+    border: 1px solid rgba(200,146,42,0.25);
+    border-radius: 3px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+
+  .branch-tag strong {
+    display: block;
+    font-size: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+  }
+
+  /* ── PANEL 4: QUIZ ── */
+  .quiz-wrap {
+    background: var(--parchment);
+    border: 1px solid rgba(200,146,42,0.25);
+    border-radius: 4px;
+    padding: 3rem 3.5rem;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+
+  .quiz-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .quiz-header h2 {
+    font-size: 2rem;
+    font-weight: 300;
+  }
+
+  .quiz-header p {
+    font-style: italic;
+    color: #9a8464;
+    margin-top: 0.3rem;
+  }
+
+  .score-bar {
+    background: rgba(200,146,42,0.1);
+    border: 1px solid rgba(200,146,42,0.3);
+    border-radius: 3px;
+    padding: 0.9rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .score-bar .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .score-display {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .score-display span { color: var(--gold); }
+
+  .q-block {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(200,146,42,0.15);
+  }
+
+  .q-block:last-of-type { border-bottom: none; }
+
+  .q-type-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    margin-bottom: 0.7rem;
+    display: inline-block;
+  }
+
+  .tag-fill { background: rgba(74,103,65,0.15); color: var(--sage); border: 1px solid rgba(74,103,65,0.3); }
+  .tag-mc   { background: rgba(200,146,42,0.12); color: var(--gold); border: 1px solid rgba(200,146,42,0.3); }
+  .tag-tf   { background: rgba(139,58,30,0.1);  color: var(--rust); border: 1px solid rgba(139,58,30,0.25); }
+
+  .q-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: #bba070;
+    margin-right: 0.4rem;
+  }
+
+  /* Fill in the blank */
+  .fill-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 1.1rem;
+  }
+
+  .fill-input {
+    border: none;
+    border-bottom: 2px solid var(--gold);
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    padding: 0.1rem 0.3rem;
+    min-width: 140px;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .fill-input:focus { border-color: var(--rust); }
+  .fill-input.correct { border-color: var(--sage); color: var(--sage); }
+  .fill-input.wrong   { border-color: var(--rust); color: var(--rust); }
+
+  /* MC options */
+  .mc-options { display: flex; flex-direction: column; gap: 0.55rem; }
+
+  .mc-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 1rem;
+    border: 1.5px solid rgba(200,146,42,0.2);
+    border-radius: 3px;
+    background: rgba(245,239,226,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+    color: var(--ink);
+    text-align: left;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .mc-opt:hover:not(:disabled) { border-color: var(--gold); background: rgba(200,146,42,0.08); }
+  .mc-opt.correct { border-color: var(--sage); background: rgba(74,103,65,0.1); color: var(--sage); }
+  .mc-opt.wrong   { border-color: var(--rust); background: rgba(139,58,30,0.08); color: var(--rust); }
+  .mc-opt:disabled { cursor: default; }
+
+  .opt-letter {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(200,146,42,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--gold);
+  }
+
+  /* True / False */
+  .tf-options { display: flex; gap: 0.8rem; }
+
+  .tf-btn {
+    flex: 1;
+    padding: 0.7rem;
+    border: 1.5px solid rgba(200,146,42,0.2);
+    border-radius: 3px;
+    background: rgba(245,239,226,0.5);
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+
+  .tf-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(200,146,42,0.08); }
+  .tf-btn.correct { border-color: var(--sage); background: rgba(74,103,65,0.1); color: var(--sage); }
+  .tf-btn.wrong   { border-color: var(--rust); background: rgba(139,58,30,0.08); color: var(--rust); }
+  .tf-btn:disabled { cursor: default; }
+
+  /* Feedback */
+  .q-feedback {
+    margin-top: 0.6rem;
+    font-size: 0.95rem;
+    font-style: italic;
+    display: none;
+  }
+
+  .q-feedback.show { display: block; }
+  .q-feedback.ok { color: var(--sage); }
+  .q-feedback.bad { color: var(--rust); }
+
+  /* Submit button */
+  .quiz-submit-row {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-submit {
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.8rem 2rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .btn-submit:hover { background: var(--rust); transform: translateY(-2px); }
+
+  .btn-reset {
+    background: none;
+    border: 1px solid rgba(200,146,42,0.4);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.4rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover { background: rgba(200,146,42,0.08); }
+
+  .result-msg {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink);
+    display: none;
+  }
+
+  .result-msg.show { display: block; }
+
+  /* Divider */
+  .ornament {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin: 2rem 0 2.5rem;
+    letter-spacing: 0.5em;
+    opacity: 0.6;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* responsive */
+  @media (max-width: 600px) {
+    .about-card, .lesson-wrap, .quiz-wrap { padding: 2rem 1.5rem; }
+    .weeks-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-eyebrow">saudalmurshed.linguistics</div>
+  <h1 class="site-title">The Study of <span>Language</span></h1>
+  <p class="site-subtitle">An introduction to the science of human communication</p>
+</header>
+
+<nav class="nav-ring">
+
+  <!-- Icon 1: About -->
+  <button class="nav-btn" id="btn-about" onclick="showPanel('about')">
+    <div class="icon-circle">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <span class="icon-label">About</span>
+  </button>
+
+  <!-- Icon 2: Syllabus -->
+  <button class="nav-btn" id="btn-syllabus" onclick="showPanel('syllabus')">
+    <div class="icon-circle">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/><rect x="14" y="13" width="6" height="6" rx="1"/></svg>
+    </div>
+    <span class="icon-label">Syllabus</span>
+  </button>
+
+  <!-- Icon 3: Lesson -->
+  <button class="nav-btn" id="btn-lesson" onclick="showPanel('lesson')">
+    <div class="icon-circle">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    </div>
+    <span class="icon-label">Lesson</span>
+  </button>
+
+  <!-- Icon 4: Quiz -->
+  <button class="nav-btn" id="btn-quiz" onclick="showPanel('quiz')">
+    <div class="icon-circle">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    </div>
+    <span class="icon-label">Quiz</span>
+  </button>
+
+</nav>
+
+<div class="panel-wrap">
+
+  <!-- ── PANEL 1: ABOUT ── -->
+  <div class="panel" id="panel-about">
+    <div class="about-card">
+      <h2>About this course</h2>
+      <p>
+        Welcome to <em>Saudalmurshed's Linguistics</em> — a carefully crafted online learning space dedicated to the scientific study of human language. This website is designed to guide learners through the rich and intricate world of linguistics, covering everything from how individual sounds are formed in the mouth to how entire communities shape and are shaped by the languages they speak. Whether you are entirely new to the field or looking to deepen an existing curiosity, this course offers a structured journey through the major branches of linguistics — including phonetics, morphology, syntax, semantics, and beyond — providing clear explanations, real-world examples, and interactive assessments to help you build a solid and lasting understanding of the science behind every word we utter.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── PANEL 2: SYLLABUS ── -->
+  <div class="panel" id="panel-syllabus">
+    <div class="syllabus-header">
+      <h2>Course Syllabus</h2>
+      <p>Thirteen weeks — one language at a time</p>
+    </div>
+    <div class="weeks-grid">
+      <div class="week-card"><div class="week-num">Week 01</div><div class="week-title">Introduction to Linguistics</div></div>
+      <div class="week-card"><div class="week-num">Week 02</div><div class="week-title">Phonetics</div></div>
+      <div class="week-card"><div class="week-num">Week 03</div><div class="week-title">Phonology</div></div>
+      <div class="week-card"><div class="week-num">Week 04</div><div class="week-title">Morphology</div></div>
+      <div class="week-card"><div class="week-num">Week 05</div><div class="week-title">Syntax</div></div>
+      <div class="week-card"><div class="week-num">Week 06</div><div class="week-title">Semantics</div></div>
+      <div class="week-card"><div class="week-num">Week 07</div><div class="week-title">Pragmatics</div></div>
+      <div class="week-card"><div class="week-num">Week 08</div><div class="week-title">Sociolinguistics</div></div>
+      <div class="week-card"><div class="week-num">Week 09</div><div class="week-title">Historical Linguistics</div></div>
+      <div class="week-card"><div class="week-num">Week 10</div><div class="week-title">Psycholinguistics</div></div>
+      <div class="week-card"><div class="week-num">Week 11</div><div class="week-title">First & Second Language Acquisition</div></div>
+      <div class="week-card"><div class="week-num">Week 12</div><div class="week-title">Discourse Analysis</div></div>
+      <div class="week-card"><div class="week-num">Week 13</div><div class="week-title">Applied Linguistics & Review</div></div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 3: LESSON ── -->
+  <div class="panel" id="panel-lesson">
+    <div class="lesson-wrap">
+      <span class="lesson-badge">Week 1 · Today's Lesson</span>
+      <h2>Introduction to Linguistics</h2>
+      <p class="lesson-sub">What language is, why it matters, and how we study it</p>
+
+      <div class="lesson-section">
+        <h3>What is Linguistics?</h3>
+        <p>Linguistics is the scientific study of language — its structure, its use, its history, and its role in human life. Unlike the casual study of grammar rules or the learning of a foreign language for practical purposes, linguistics approaches language as a natural phenomenon worthy of systematic inquiry. Linguists ask fundamental questions: What do all human languages have in common? How do children acquire language so effortlessly? Why do languages change over time? How does the language we speak shape the way we think?</p>
+        <p>Language is perhaps the most distinctly human capacity we possess. Every known human society — no matter how geographically isolated — has a fully developed, complex language. This universality suggests that language is not simply a cultural invention but a deep feature of human cognition and biology.</p>
+      </div>
+
+      <div class="lesson-section">
+        <h3>Major Branches of Linguistics</h3>
+        <p>The field of linguistics is broad and diverse. Below are the core sub-disciplines you will encounter throughout this course:</p>
+        <div class="branches-list">
+          <div class="branch-tag"><strong>Phonetics</strong>The study of speech sounds</div>
+          <div class="branch-tag"><strong>Phonology</strong>Sound systems & patterns</div>
+          <div class="branch-tag"><strong>Morphology</strong>Word structure & formation</div>
+          <div class="branch-tag"><strong>Syntax</strong>Sentence grammar & structure</div>
+          <div class="branch-tag"><strong>Semantics</strong>Meaning in language</div>
+          <div class="branch-tag"><strong>Pragmatics</strong>Language in context</div>
+          <div class="branch-tag"><strong>Sociolinguistics</strong>Language & society</div>
+          <div class="branch-tag"><strong>Psycholinguistics</strong>Language & the mind</div>
+        </div>
+      </div>
+
+      <div class="lesson-section">
+        <h3>Why Study Linguistics?</h3>
+        <p>Studying linguistics has profound practical and intellectual rewards. It sharpens our understanding of communication, which lies at the heart of education, law, medicine, technology, and diplomacy. Computational linguistics underpins the AI assistants and translation tools reshaping modern life. Language documentation preserves endangered tongues and the cultural knowledge encoded within them. For educators, an understanding of language acquisition is invaluable. For everyone, linguistics offers the rare gift of seeing the invisible — the grammar, the sound systems, the social meaning — hidden inside every sentence we speak.</p>
+      </div>
+
+      <div class="lesson-section">
+        <h3>Language vs. Languages</h3>
+        <p>An important distinction in linguistics is between <em>language</em> (the human capacity for symbolic communication) and <em>languages</em> (specific systems like Arabic, English, or Swahili). Linguists are interested in both: the universal cognitive faculty shared by all humans, and the astonishing diversity of the approximately 7,000 languages spoken across the globe today. This tension between universality and diversity is one of the most exciting threads running through all of linguistics.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PANEL 4: QUIZ ── -->
+  <div class="panel" id="panel-quiz">
+    <div class="quiz-wrap">
+      <div class="quiz-header">
+        <h2>Quiz — Week 1</h2>
+        <p>Introduction to Linguistics · 9 questions</p>
+      </div>
+
+      <div class="score-bar">
+        <span class="label">Live Score</span>
+        <span class="score-display"><span id="score-num">0</span> / <span id="score-total">9</span></span>
+        <span id="score-pct" style="font-family:'DM Mono',monospace;font-size:0.75rem;color:#9a8464;margin-left:auto;"></span>
+      </div>
+
+      <!-- ── FILL IN THE BLANK (3) ── -->
+      <div class="q-block" id="q1">
+        <span class="q-type-tag tag-fill">Fill in the Blank</span>
+        <p class="q-text"><span class="q-num">01.</span>
+          Linguistics is the <span class="fill-wrap"><input class="fill-input" id="q1-ans" type="text" placeholder="___________" autocomplete="off"></span> study of language.
+        </p>
+        <div class="q-feedback" id="q1-fb"></div>
+      </div>
+
+      <div class="q-block" id="q2">
+        <span class="q-type-tag tag-fill">Fill in the Blank</span>
+        <p class="q-text"><span class="q-num">02.</span>
+          The branch of linguistics that studies speech sounds is called <span class="fill-wrap"><input class="fill-input" id="q2-ans" type="text" placeholder="___________" autocomplete="off"></span>.
+        </p>
+        <div class="q-feedback" id="q2-fb"></div>
+      </div>
+
+      <div class="q-block" id="q3">
+        <span class="q-type-tag tag-fill">Fill in the Blank</span>
+        <p class="q-text"><span class="q-num">03.</span>
+          There are approximately <span class="fill-wrap"><input class="fill-input" id="q3-ans" type="text" placeholder="___________" autocomplete="off"></span> languages spoken in the world today.
+        </p>
+        <div class="q-feedback" id="q3-fb"></div>
+      </div>
+
+      <div class="ornament">· · ·</div>
+
+      <!-- ── MULTIPLE CHOICE (3) ── -->
+      <div class="q-block" id="q4">
+        <span class="q-type-tag tag-mc">Multiple Choice</span>
+        <p class="q-text"><span class="q-num">04.</span> Which of the following is NOT a branch of linguistics?</p>
+        <div class="mc-options" id="q4-opts">
+          <button class="mc-opt" onclick="answerMC(4,'A')"><span class="opt-letter">A</span>Morphology</button>
+          <button class="mc-opt" onclick="answerMC(4,'B')"><span class="opt-letter">B</span>Syntax</button>
+          <button class="mc-opt" onclick="answerMC(4,'C')"><span class="opt-letter">C</span>Astronomy</button>
+          <button class="mc-opt" onclick="answerMC(4,'D')"><span class="opt-letter">D</span>Semantics</button>
+        </div>
+        <div class="q-feedback" id="q4-fb"></div>
+      </div>
+
+      <div class="q-block" id="q5">
+        <span class="q-type-tag tag-mc">Multiple Choice</span>
+        <p class="q-text"><span class="q-num">05.</span> Pragmatics is the study of:</p>
+        <div class="mc-options" id="q5-opts">
+          <button class="mc-opt" onclick="answerMC(5,'A')"><span class="opt-letter">A</span>Word structure and formation</button>
+          <button class="mc-opt" onclick="answerMC(5,'B')"><span class="opt-letter">B</span>Language in context and speaker intention</button>
+          <button class="mc-opt" onclick="answerMC(5,'C')"><span class="opt-letter">C</span>How languages change over time</button>
+          <button class="mc-opt" onclick="answerMC(5,'D')"><span class="opt-letter">D</span>Sound patterns in language</button>
+        </div>
+        <div class="q-feedback" id="q5-fb"></div>
+      </div>
+
+      <div class="q-block" id="q6">
+        <span class="q-type-tag tag-mc">Multiple Choice</span>
+        <p class="q-text"><span class="q-num">06.</span> Which sub-discipline of linguistics studies the structure of sentences?</p>
+        <div class="mc-options" id="q6-opts">
+          <button class="mc-opt" onclick="answerMC(6,'A')"><span class="opt-letter">A</span>Phonology</button>
+          <button class="mc-opt" onclick="answerMC(6,'B')"><span class="opt-letter">B</span>Semantics</button>
+          <button class="mc-opt" onclick="answerMC(6,'C')"><span class="opt-letter">C</span>Syntax</button>
+          <button class="mc-opt" onclick="answerMC(6,'D')"><span class="opt-letter">D</span>Sociolinguistics</button>
+        </div>
+        <div class="q-feedback" id="q6-fb"></div>
+      </div>
+
+      <div class="ornament">· · ·</div>
+
+      <!-- ── TRUE / FALSE (3) ── -->
+      <div class="q-block" id="q7">
+        <span class="q-type-tag tag-tf">True or False</span>
+        <p class="q-text"><span class="q-num">07.</span> Every human society that has ever been discovered has had a fully developed, complex language.</p>
+        <div class="tf-options" id="q7-opts">
+          <button class="tf-btn" onclick="answerTF(7, true)">True</button>
+          <button class="tf-btn" onclick="answerTF(7, false)">False</button>
+        </div>
+        <div class="q-feedback" id="q7-fb"></div>
+      </div>
+
+      <div class="q-block" id="q8">
+        <span class="q-type-tag tag-tf">True or False</span>
+        <p class="q-text"><span class="q-num">08.</span> Linguistics is only concerned with written language, not spoken language.</p>
+        <div class="tf-options" id="q8-opts">
+          <button class="tf-btn" onclick="answerTF(8, true)">True</button>
+          <button class="tf-btn" onclick="answerTF(8, false)">False</button>
+        </div>
+        <div class="q-feedback" id="q8-fb"></div>
+      </div>
+
+      <div class="q-block" id="q9">
+        <span class="q-type-tag tag-tf">True or False</span>
+        <p class="q-text"><span class="q-num">09.</span> Computational linguistics plays a role in developing AI language assistants and translation tools.</p>
+        <div class="tf-options" id="q9-opts">
+          <button class="tf-btn" onclick="answerTF(9, true)">True</button>
+          <button class="tf-btn" onclick="answerTF(9, false)">False</button>
+        </div>
+        <div class="q-feedback" id="q9-fb"></div>
+      </div>
+
+      <div class="quiz-submit-row">
+        <button class="btn-submit" onclick="submitFill()">Check Fill-in Answers</button>
+        <button class="btn-reset" onclick="resetQuiz()">Reset Quiz</button>
+        <span class="result-msg" id="result-msg"></span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Panel switching ──
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('btn-' + name).classList.add('active');
+}
+
+// ── Quiz state ──
+let score = 0;
+let answered = {};
+const TOTAL = 9;
+
+// Fill answers (accept case-insensitive, trim)
+const fillAnswers = {
+  'q1': ['scientific'],
+  'q2': ['phonetics'],
+  'q3': ['7000', '7,000', 'seven thousand', '~7000', 'around 7000']
+};
+
+// MC correct answers
+const mcAnswers = { 4: 'C', 5: 'B', 6: 'C' };
+
+// TF correct answers
+const tfAnswers = { 7: true, 8: false, 9: true };
+
+const feedback = {
+  4: { ok: 'Correct! Astronomy is a natural science, not a branch of linguistics.', bad: 'Not quite. The correct answer is C — Astronomy.' },
+  5: { ok: 'Correct! Pragmatics studies how context shapes meaning and speaker intent.', bad: 'Incorrect. Pragmatics is about language in context — the correct answer is B.' },
+  6: { ok: 'Correct! Syntax is the study of sentence structure.', bad: 'Incorrect. Syntax studies sentence structure — the correct answer is C.' },
+  7: { ok: 'Correct! All known human societies have complex languages.', bad: 'Incorrect. This statement is True — language is universal across human societies.' },
+  8: { ok: 'Correct! Linguistics studies spoken language just as much as written.', bad: 'Incorrect. This statement is False — linguistics covers spoken language primarily.' },
+  9: { ok: 'Correct! Computational linguistics underpins many modern AI tools.', bad: 'Incorrect. This statement is True — computational linguistics powers AI language applications.' }
+};
+
+function updateScore() {
+  document.getElementById('score-num').textContent = score;
+  const pct = Math.round((score / TOTAL) * 100);
+  document.getElementById('score-pct').textContent = pct + '%';
+}
+
+// Fill in blank submission
+function submitFill() {
+  ['q1','q2','q3'].forEach(qid => {
+    if (answered[qid]) return;
+    const inp = document.getElementById(qid + '-ans');
+    const val = inp.value.trim().toLowerCase();
+    const correct = fillAnswers[qid].some(a => a.toLowerCase() === val);
+    const fb = document.getElementById(qid + '-fb');
+    inp.disabled = true;
+    if (correct) {
+      inp.classList.add('correct');
+      fb.textContent = '✓ Correct!';
+      fb.className = 'q-feedback show ok';
+      if (!answered[qid]) { score++; updateScore(); }
+    } else {
+      inp.classList.add('wrong');
+      fb.textContent = '✗ Incorrect. Correct answer: ' + fillAnswers[qid][0];
+      fb.className = 'q-feedback show bad';
+    }
+    answered[qid] = true;
+  });
+  checkAllDone();
+}
+
+// Multiple choice
+function answerMC(qNum, choice) {
+  if (answered['q' + qNum]) return;
+  answered['q' + qNum] = true;
+  const correct = mcAnswers[qNum];
+  const opts = document.querySelectorAll('#q' + qNum + '-opts .mc-opt');
+  const letters = ['A','B','C','D'];
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    if (letters[i] === correct) btn.classList.add('correct');
+    else if (letters[i] === choice && choice !== correct) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById('q' + qNum + '-fb');
+  if (choice === correct) {
+    fb.textContent = '✓ ' + feedback[qNum].ok;
+    fb.className = 'q-feedback show ok';
+    score++; updateScore();
+  } else {
+    fb.textContent = '✗ ' + feedback[qNum].bad;
+    fb.className = 'q-feedback show bad';
+  }
+  checkAllDone();
+}
+
+// True / False
+function answerTF(qNum, choice) {
+  if (answered['q' + qNum]) return;
+  answered['q' + qNum] = true;
+  const correct = tfAnswers[qNum];
+  const btns = document.querySelectorAll('#q' + qNum + '-opts .tf-btn');
+  btns.forEach(btn => {
+    btn.disabled = true;
+    const isTrue = btn.textContent === 'True';
+    if (isTrue === correct) btn.classList.add('correct');
+    else if (isTrue === choice && choice !== correct) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById('q' + qNum + '-fb');
+  if (choice === correct) {
+    fb.textContent = '✓ ' + feedback[qNum].ok;
+    fb.className = 'q-feedback show ok';
+    score++; updateScore();
+  } else {
+    fb.textContent = '✗ ' + feedback[qNum].bad;
+    fb.className = 'q-feedback show bad';
+  }
+  checkAllDone();
+}
+
+function checkAllDone() {
+  if (Object.keys(answered).length === TOTAL) {
+    const msg = document.getElementById('result-msg');
+    const pct = Math.round((score / TOTAL) * 100);
+    if (pct >= 80) msg.textContent = `Outstanding! You scored ${score}/${TOTAL} (${pct}%) — excellent understanding.`;
+    else if (pct >= 60) msg.textContent = `Good work! You scored ${score}/${TOTAL} (${pct}%) — review the missed topics.`;
+    else msg.textContent = `You scored ${score}/${TOTAL} (${pct}%) — revisit the lesson and try again.`;
+    msg.classList.add('show');
+  }
+}
+
+function resetQuiz() {
+  score = 0; answered = {};
+  updateScore();
+  // Reset fill
+  ['q1','q2','q3'].forEach(qid => {
+    const inp = document.getElementById(qid + '-ans');
+    inp.value = ''; inp.disabled = false;
+    inp.className = 'fill-input';
+    const fb = document.getElementById(qid + '-fb');
+    fb.className = 'q-feedback'; fb.textContent = '';
+  });
+  // Reset MC
+  [4,5,6].forEach(qNum => {
+    const opts = document.querySelectorAll('#q' + qNum + '-opts .mc-opt');
+    opts.forEach(btn => { btn.disabled = false; btn.className = 'mc-opt'; });
+    const fb = document.getElementById('q' + qNum + '-fb');
+    fb.className = 'q-feedback'; fb.textContent = '';
+  });
+  // Reset TF
+  [7,8,9].forEach(qNum => {
+    const btns = document.querySelectorAll('#q' + qNum + '-opts .tf-btn');
+    btns.forEach(btn => { btn.disabled = false; btn.className = 'tf-btn'; });
+    const fb = document.getElementById('q' + qNum + '-fb');
+    fb.className = 'q-feedback'; fb.textContent = '';
+  });
+  document.getElementById('result-msg').className = 'result-msg';
+  document.getElementById('score-pct').textContent = '';
+}
+</script>
+</body>
+</html>
